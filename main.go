@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"fmt"
 	"os"
 
@@ -8,8 +9,9 @@ import (
 )
 
 func main() {
+	ctx := context.Background()
 	app := internal.NewApp()
-	if err := app.Run(); err != nil {
+	if err := app.Run(ctx); err != nil {
 		fmt.Fprintf(os.Stderr, "%s\n", err)
 		os.Exit(1)
 	}
