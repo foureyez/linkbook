@@ -44,7 +44,7 @@ func (c *collectionStore) GetByName(ctx context.Context, name string) (*persiste
 	}
 
 	var collection persistence.Collection
-	err := row.StructScan(&c)
+	err := row.StructScan(&collection)
 	if err != nil {
 		return nil, err
 	}

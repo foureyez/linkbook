@@ -3,6 +3,7 @@ package service
 import (
 	"context"
 
+	"github.com/foureyez/linkbook/internal/logger"
 	persistence "github.com/foureyez/linkbook/internal/peristance"
 )
 
@@ -27,6 +28,7 @@ func (c *collectionService) GetAll(ctx context.Context) ([]Collection, error) {
 func (c *collectionService) GetByName(ctx context.Context, name string) (*Collection, error) {
 	collection, err := c.store.GetByName(ctx, name)
 	if err != nil {
+		logger.Get().Errorf("Unable to get collection, name: %s, err: %s", name, err.Error())
 		return nil, err
 	}
 	return NewCollection(collection), nil
