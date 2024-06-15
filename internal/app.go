@@ -2,12 +2,13 @@ package internal
 
 import (
 	"context"
+	"html/template"
 
 	"github.com/jmoiron/sqlx"
 	"github.com/spf13/viper"
 
 	"github.com/foureyez/linkbook/config"
-	"github.com/foureyez/linkbook/internal/api"
+	"github.com/foureyez/linkbook/internal/handlers"
 	"github.com/foureyez/linkbook/internal/http"
 	"github.com/foureyez/linkbook/internal/peristance/sql"
 	"github.com/foureyez/linkbook/internal/service"
@@ -30,24 +31,27 @@ func (a *App) Run(ctx context.Context) error {
 		return err
 	}
 
-	handlers, err := a.getApiHandlers(db)
+	templates := template.Must(template.ParseGlob("web/views/*.html"))
+
+	handlers, err := a.getApiHandlers(templates, db)
 	if err != nil {
 		return err
 	}
 
-	if err := http.StartServer(ctx, &cfg.Server, handlers); err != nil {
+	if err := http.StartServer(ctx, &cfg.Server, templates, handlers); err != nil {
 		return err
 	}
 	return nil
 }
 
-func (a *App) getApiHandlers(db *sqlx.DB) ([]api.Handler, error) {
-	handlers := make([]api.Handler, 0)
+func (a *App) getApiHandlers(templates *template.Template, db *sqlx.DB) ([]handlers.Handler, error) {
+	handlerFuncs := make([]handlers.Handler, 0)
+
 	collectionStore := sql.NewCollectionStore(db)
 	collectionService := service.NewCollectionService(collectionStore)
 
-	handlers = append(handlers, api.NewCollectionHandler(collectionService))
-	return handlers, nil
+	handlerFuncs = append(handlerFuncs, handlers.NewCollectionHandler(templates, collectionService))
+	return handlerFuncs, nil
 }
 
 func (a *App) initConfig() (*config.Config, error) {
