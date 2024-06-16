@@ -32,7 +32,7 @@ func (c *Collections) getAllCollections(w http.ResponseWriter, r *http.Request) 
 		return
 	}
 
-	if err := c.templates.ExecuteTemplate(w, "collections", collections); err != nil {
+	if err := c.templates.ExecuteTemplate(w, "collections.html", collections); err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 	}
 }

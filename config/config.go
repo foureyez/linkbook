@@ -1,7 +1,8 @@
 package config
 
 type Config struct {
-	Server Server
+	Server         Server
+	TemplatesPaths []string
 }
 
 type Server struct {

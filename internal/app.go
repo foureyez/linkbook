@@ -3,6 +3,7 @@ package internal
 import (
 	"context"
 	"html/template"
+	"path/filepath"
 
 	"github.com/jmoiron/sqlx"
 	"github.com/spf13/viper"
@@ -10,6 +11,7 @@ import (
 	"github.com/foureyez/linkbook/config"
 	"github.com/foureyez/linkbook/internal/handlers"
 	"github.com/foureyez/linkbook/internal/http"
+	"github.com/foureyez/linkbook/internal/logger"
 	"github.com/foureyez/linkbook/internal/peristance/sql"
 	"github.com/foureyez/linkbook/internal/service"
 )
@@ -31,8 +33,7 @@ func (a *App) Run(ctx context.Context) error {
 		return err
 	}
 
-	templates := template.Must(template.ParseGlob("web/views/*.html"))
-
+	templates, err := a.initTemplates(cfg)
 	handlers, err := a.getApiHandlers(templates, db)
 	if err != nil {
 		return err
@@ -71,4 +72,24 @@ func (a *App) initConfig() (*config.Config, error) {
 		return nil, err
 	}
 	return cfg, nil
+}
+
+func (a *App) initTemplates(cfg *config.Config) (*template.Template, error) {
+	templateFiles := []string{}
+	for _, p := range cfg.TemplatesPaths {
+		filePath, err := filepath.Glob(p)
+		if err != nil {
+			panic(err)
+		}
+		templateFiles = append(templateFiles, filePath...)
+	}
+	logger.Get().Infof("Found %d templates", len(templateFiles))
+
+	templates, err := template.ParseFiles(templateFiles...)
+	if err != nil {
+		return nil, err
+	}
+
+	logger.Get().Infof("Initialized %d templates", len(templates.Templates()))
+	return templates, nil
 }

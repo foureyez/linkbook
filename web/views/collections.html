@@ -1,16 +1,14 @@
-{{define "collections"}}
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title></title>
-    <link href="css/style.css" rel="stylesheet" />
-  </head>
-  <body>
-    {{range .}}
-    <h1>{{.Name}}</h1>
-    {{end}}
-  </body>
+{{template "header.html"}}
+<body>
+  <h1>Collections</h1>
+  {{range .}}
+  <p>{{.Name}}</p>
+  {{end}} 
+  {{block "collectionForm" .}}
+  <input type="text" id="collectionInput" />
+  <button>Add Collection</button>{{end}} 
+  {{template "footer.html"}}
+</body>
 </html>
-{{end}}

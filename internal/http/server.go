@@ -27,7 +27,7 @@ func StartServer(ctx context.Context, config *config.Server, templates *template
 	// })
 
 	mux.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-		if err := templates.ExecuteTemplate(w, "index", nil); err != nil {
+		if err := templates.ExecuteTemplate(w, "index.html", nil); err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
 		}
 	})
