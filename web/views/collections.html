@@ -1,14 +1,14 @@
-<!doctype html>
 <html lang="en">
-{{template "header.html"}}
-<body>
-  <h1>Collections</h1>
-  {{range .}}
-  <p>{{.Name}}</p>
-  {{end}} 
-  {{block "collectionForm" .}}
-  <input type="text" id="collectionInput" />
-  <button>Add Collection</button>{{end}} 
-  {{template "footer.html"}}
-</body>
+  {{ template "header.html" }}
+  <body>
+    <h1>Collections</h1>
+    {{ range . }}
+    <p>{{.Name}}</p>
+    {{ end }}
+    {{ block "collectionForm" . }}
+    <input type="text" id="collectionInput" />
+    <button>Add Collection</button>
+    {{ end }}
+    {{ template "footer.html" }}
+  </body>
 </html>
