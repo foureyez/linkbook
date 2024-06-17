@@ -34,6 +34,10 @@ func (a *App) Run(ctx context.Context) error {
 	}
 
 	templates, err := a.initTemplates(cfg)
+	if err != nil {
+		return err
+	}
+
 	handlers, err := a.getApiHandlers(templates, db)
 	if err != nil {
 		return err
