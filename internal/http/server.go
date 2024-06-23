@@ -27,7 +27,9 @@ func StartServer(ctx context.Context, config *config.Server, templates *template
 	// })
 
 	mux.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Add("HX-Trigger", "refreshCollection")
 		if err := templates.ExecuteTemplate(w, "index.html", nil); err != nil {
+			logger.Get().Errorf("Unable to serve index: %s", err.Error())
 			w.WriteHeader(http.StatusInternalServerError)
 		}
 	})
