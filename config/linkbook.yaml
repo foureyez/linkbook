@@ -1,8 +1,0 @@
-server:
-  host: localhost
-  port: 9999
-
-templatesPaths: 
-  - "web/views/*.html"
-  - "web/views/partials/*.html"
-
